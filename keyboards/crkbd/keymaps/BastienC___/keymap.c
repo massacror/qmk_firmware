@@ -1,21 +1,3 @@
-/*
-Copyright 2019 @foostan
-Copyright 2020 Drashna Jaelre <@drashna>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -68,67 +50,71 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       //`--------------------------'  `--------------------------'
   )
 };
-
+/*
 void keyboard_post_init_user(void) {
     rgblight_enable(); // Enables RGB lighting
     rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT); // Sets static color mode
     rgblight_sethsv(32, 178, 170); // Set color to blue
 }
+*/
 
-/*
-// Define combo actions for French accented letters
-enum combos {
-    COMBO_E_ACUTE,  // é: A + Z
-    COMBO_E_GRAVE,  // è: Z + E
+// Combos
+
+enum combo_events {
+    RETURN_COMBO,
+    SELECT_COMBO,
+    FROM_COMBO,
+    RANGE_COMBO,
+    TEST_COMBO,
 };
 
-// Define the key combinations for each combo
-const uint16_t PROGMEM e_acute_combo[] = {KC_A, KC_Z, COMBO_END};  // combo for é (A + Z)
-const uint16_t PROGMEM e_grave_combo[] = {KC_Z, KC_E, COMBO_END};  // combo for è (Z + E)
+const uint16_t PROGMEM return_combo[] = { KC_R, KC_T, KC_N, COMBO_END };
+const uint16_t PROGMEM select_combo[] = { KC_S, KC_L, KC_T, COMBO_END };
+const uint16_t PROGMEM from_combo[] = { KC_F, KC_O, KC_M, COMBO_END };
+const uint16_t PROGMEM range_combo[] = { KC_R, KC_G, KC_N, COMBO_END };
+const uint16_t PROGMEM test_combo[] = { KC_A, KC_P, COMBO_END };
 
-// Map the combos to their corresponding outputs
-combo_t key_combos[2] = {
-    [COMBO_E_ACUTE] = COMBO(e_acute_combo, UC(0x00E9)),   // é
-    [COMBO_E_GRAVE] = COMBO(e_grave_combo, UC(0x00E8)),   // è
+combo_t key_combos[] = {
+    [RETURN_COMBO] = COMBO_ACTION(return_combo),
+    [SELECT_COMBO] = COMBO_ACTION(select_combo),
+    [FROM_COMBO] = COMBO_ACTION(from_combo),
+    [RANGE_COMBO] = COMBO_ACTION(range_combo),
+    [TEST_COMBO] = COMBO_ACTION(test_combo),
 };
-
-// Custom keycodes for accented letters
-enum custom_keycodes {
-    KC_EACUTE = SAFE_RANGE,  // é
-    KC_EGRAVE,               // è
-};
-
-
-// Define what happens when the custom keycodes are triggered
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case KC_EACUTE:
-            if (record->event.pressed) {
-                send_string(SS_TAP(X_E) SS_RALT("e"));  // Send 'é'
-            }
-            break;
-        case KC_EGRAVE:
-            if (record->event.pressed) {
-                send_string(SS_RALT("`") SS_TAP(X_E));  // Send 'è'
-            }
-            break;
-    }
-    return true;
-}
-
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
   switch(combo_index) {
-    case KC_EACUTE:
+    case RETURN_COMBO:
       if (pressed) {
-        send_string(SS_TAP(X_E) SS_RALT("e"));  // Send 'é'
+        SEND_STRING("return");
       }
       break;
-    case KC_EGRAVE:
+      
+      case SELECT_COMBO:
       if (pressed) {
-        send_string(SS_RALT("`") SS_TAP(X_E));  // Send 'è'
+        SEND_STRING("select");
+      }
+      break;
+      
+      case FROM_COMBO:
+      if (pressed) {
+        SEND_STRING("from");
+      }
+      break;
+      
+      case RANGE_COMBO:
+      if (pressed) {
+        SEND_STRING("range");
+      }
+      break;
+
+      case TEST_COMBO:
+      if (pressed) {
+        SEND_STRING("testing");
       }
       break;
   }
 }
-*/
+
+
+
