@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //#define QUICK_TAP_TERM 0
 //#define TAPPING_TERM 100
-
 #ifdef RGBLIGHT_ENABLE
     #define RGBLIGHT_EFFECT_BREATHING
     #define RGBLIGHT_EFFECT_RAINBOW_MOOD
@@ -50,4 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TERM_PER_KEY
 /* #define COMBO_TERM 20 */
 
+#undef RGBLED_SPLIT
+#define RGBLED_SPLIT { 24, 24 }
 #define COMBO_COUNT 1
