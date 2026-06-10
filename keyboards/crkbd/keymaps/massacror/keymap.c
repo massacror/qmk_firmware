@@ -49,8 +49,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [3] = LAYOUT_split_3x6_3(
         KC_TRANSPARENT, RALT(KC_1), RALT(KC_2), RALT(KC_3), RALT(KC_4), RALT(KC_5),       KC_PIPE, KC_5, KC_MINUS, RALT(KC_4), RALT(KC_EQUAL), KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                                  KC_TRANSPARENT, RALT(KC_5), RALT(KC_MINUS), KC_6, RSFT(KC_EQUAL), KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,                               KC_TRANSPARENT, KC_LABK, KC_RABK, KC_TRANSPARENT, KC_EQUAL, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                                  KC_F11, RALT(KC_5), RALT(KC_MINUS), KC_6, MT(MOD_RCL,RSFT(KC_EQUAL)), KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,                               KC_F12, KC_LABK, KC_RABK, KC_TRANSPARENT, KC_EQUAL, KC_TRANSPARENT,
                                                                              KC_LGUI, _______, KC_SPC,       KC_ENT, KC_TRANSPARENT, KC_RALT
     )
 };
