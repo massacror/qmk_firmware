@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [0] = LAYOUT_split_3x6_3(
-        XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_NO,
+                             XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    LT(4,KC_I),    KC_O,    KC_P,    KC_NO,
         XXXXXXX, MT(MOD_LCTL, KC_A), MT(MOD_LSFT, KC_S), KC_D,   KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    MT(MOD_RSFT,KC_L), MT(MOD_RCTL,KC_SCLN), KC_QUOT,
         XXXXXXX, MT(MOD_LCTL,KC_Z),    KC_X,    KC_C,    MT(MOD_LGUI,KC_V), MT(MOD_LALT,KC_B),       MT(MOD_LALT,KC_N),    KC_M, KC_COMM, KC_DOT, KC_SLASH,  KC_ESC,
                                               KC_LGUI,   MO(3), LT(2, KC_SPACE),                       LT(1,KC_SPACE),   KC_BSPC, KC_TAB
@@ -53,6 +53,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRANSPARENT, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,                               KC_F12, KC_LABK, KC_RABK, KC_TRANSPARENT, KC_EQUAL, KC_TRANSPARENT,
                                   MT(MOD_LCTL | MOD_LALT, KC_NO), _______, KC_SPC,       KC_ENT, KC_TRANSPARENT, KC_RALT
     )
+    ,
+    [4] = LAYOUT_split_3x6_3(
+                             KC_TRANSPARENT, RGB_VAD, RGB_VAI, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                             KC_TRANSPARENT, KC_AUDIO_VOL_DOWN, KC_AUDIO_VOL_UP, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                             KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                             KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+                             )
+
 };
 const uint16_t PROGMEM echap[] = {KC_F, KC_D, COMBO_END};
 combo_t key_combos[] = {
