@@ -62,7 +62,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              )
 
 };
-const uint16_t PROGMEM echap[] = {KC_F, KC_D, COMBO_END};
+const uint16_t PROGMEM caps_lock[] = {KC_F, KC_D, COMBO_END};
+const uint16_t PROGMEM echap[] = {KC_E, KC_R, COMBO_END};
 combo_t key_combos[] = {
-    COMBO(echap, KC_CAPS),
+    COMBO(caps_lock, KC_CAPS),
+    COMBO(echap, KC_ESC)
 };
