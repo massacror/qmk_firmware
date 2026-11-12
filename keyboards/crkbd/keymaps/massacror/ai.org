@@ -1,0 +1,125 @@
+:PROPERTIES:
+:GPTEL_PRESET: fs
+:GPTEL_MODEL: accounts/fireworks/models/ember-1
+:GPTEL_BACKEND: Fireworks
+:GPTEL_BOUNDS: ((response (428 618) (636 2514) (2609 2652) (2670 4560)))
+:END:
+
+
+[[/home/kim/qmk_firmware/keyboards/crkbd/keymaps/massacror/keymap.c]]
+rajoute moi un combo qui me permette d'avoir un clavier normal pour jouer quand j'appuie sur les touches w!ap
+@no-tools
+
+écris moi ce qu'il manque.
+
+
+
+
+
+#+begin_reasoning
+User wants a combo to toggle a "gaming" layer (normal QWERTY keyboard) when pressing W, A, P simultaneously ("wap"). Add a combo and a layer 5 gaming layer, with a way to exit. Provide code.
+#+end_reasoning
+
+Voici ce qu'il faut ajouter : un *layer gaming* (clavier normal sans mod-tap) et un *combo sur W+A+P* pour basculer dessus.
+
+** 1. Ajouter la définition du layer gaming
+
+Dans =keymaps[]=, ajoute après le layer =[4]= :
+
+#+begin_src c
+    ,
+    [5] = LAYOUT_split_3x6_3(  // Layer gaming : clavier "normal"
+        KC_TAB,  KC_Q, KC_W, KC_E, KC_R, KC_T,       KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_ESC,
+        KC_ESC,  KC_A, KC_S, KC_D, KC_F, KC_G,       KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT,
+        KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B,       KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_ESC,
+                       KC_LCTL, KC_SPC, TG(5),       KC_ENT, KC_BSPC, KC_RALT
+    )
+#+end_src
+
+** 2. Déclarer le combo (à côté des autres, en bas du fichier)
+
+#+begin_src c
+const uint16_t PROGMEM gaming[] = {KC_W, MT(MOD_LCTL, KC_A), KC_P, COMBO_END};
+#+end_src
+
+** 3. L'ajouter au tableau =key_combos=
+
+#+begin_src c
+combo_t key_combos[] = {
+    COMBO(caps_lock, KC_CAPS),
+    COMBO(echap, KC_ESC),
+    COMBO(gaming, TG(5))   // W+A+P → toggle layer gaming
+};
+#+end_src
+
+** Explications
+
+- =TG(5)= *bascule* le layer 5 : un appui sur =W+A+P= active le mode gaming, un autre appui le désactive.
+- Sur le layer gaming, les touches =A=, =S=, =Z=, =V=, =N= perdent leurs modificateurs (Ctrl/Shift/Gui/Alt) pour éviter les comportements bizarres en jeu.
+- J'ai mis =TG(5)= sur le pouce gauche comme sécurité : si le combo ne répond pas en jeu (ex. une des touches est utilisée ailleurs), tu peux quand même sortir du layer avec le pouce.
+- ⚠️ Pense à vérifier que ton =rules.mk= contient bien =COMBO_ENABLE = yes= et que =config.h= a éventuellement =#define COMBO_COUNT 3= si tu l'utilises (sinon QMK le déduit automatiquement dans les versions récentes).
+
+Tu peux ajuster le layout du layer 5 selon les jeux (par ex. =KC_SPC= plus accessible, =KC_TAB=/=KC_M= pour la map, etc.).
+
+** rajoute moi un 
+
+** Quels sont les codes pour les touches du numpad?
+
+
+
+#+begin_reasoning
+User asks for QMK keycodes for numpad keys.
+#+end_reasoning
+
+Voici les keycodes QMK pour le pavé numérique (numpad) :
+
+*Chiffres :*
+| Touche | Keycode |
+|--------|---------|
+| 0 | =KC_P0= (ou =KC_KP_0=) |
+| 1 | =KC_P1= (ou =KC_KP_1=) |
+| 2 | =KC_P2= (ou =KC_KP_2=) |
+| 3 | =KC_P3= (ou =KC_KP_3=) |
+| 4 | =KC_P4= (ou =KC_KP_4=) |
+| 5 | =KC_P5= (ou =KC_KP_5=) |
+| 6 | =KC_P6= (ou =KC_KP_6=) |
+| 7 | =KC_P7= (ou =KC_KP_7=) |
+| 8 | =KC_P8= (ou =KC_KP_8=) |
+| 9 | =KC_P9= (ou =KC_KP_9=) |
+
+*Opérateurs et divers :*
+| Touche | Keycode |
+|--------|---------|
+| . (point) | =KC_PDOT= (ou =KC_KP_DOT=) |
+| , (virgule) | =KC_PCMM= (ou =KC_KP_COMMA=) |
+| + | =KC_PPLS= (ou =KC_KP_PLUS=) |
+| - | =KC_PMNS= (ou =KC_KP_MINUS=) |
+| * | =KC_PAST= (ou =KC_KP_ASTERISK=) |
+| / | =KC_PSLS= (ou =KC_KP_SLASH=) |
+| = | =KC_PEQL= (ou =KC_KP_EQUAL=) |
+| Entrée | =KC_PENT= (ou =KC_KP_ENTER=) |
+| Num Lock | =KC_NUM= (ou =KC_NUM_LOCK=) |
+
+*Exemple d'usage dans un layer :*
+#+begin_src c
+[6] = LAYOUT_split_3x6_3(
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_PSLS, KC_P7, KC_P8, KC_P9, KC_PMNS, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_PAST, KC_P4, KC_P5, KC_P6, KC_PPLS, XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_P0,   KC_P1, KC_P2, KC_P3, KC_PDOT, XXXXXXX,
+                                  _______, _______, _______,       KC_PENT, _______, _______
+)
+#+end_src
+
+⚠️ *Important* : le numpad ne fonctionne que si *Num Lock est activé* sur ton PC (sinon =KC_P4= fait "flèche gauche", etc.). Si ton PC démarre sans Num Lock, tu peux forcer son activation au boot en ajoutant dans =keymap.c= :
+
+#+begin_src c
+void keyboard_post_init_user(void) {
+    if (!host_keyboard_led_state().num_lock) {
+        tap_code(KC_NUM);
+    }
+}
+#+end_src
+
+💡 Note : les deux formes (=KC_P1= et =KC_KP_1=) sont équivalentes ; =KC_KP_*= est la forme "officielle" récente, =KC_P*= est l'alias court historique.
+
+*** 

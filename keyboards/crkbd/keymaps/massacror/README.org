@@ -1,0 +1,143 @@
+* commandes utiles
+
+** flasher le firmware
+
+qmk flash -kb crkbd -km massacror
+
+qmk compile -kb crkbd -km massacror
+
+** [#A] sur nixos *pour compiler*
+
+#+begin_src bash
+cd ~/qmk_firmware
+nix-shell   # utilise shell.nix
+#+end_src
+
+* comment gérer les dépendances qmk dans nixos?
+
+
+
+
+Sur NixOS, il ne faut pas utiliser =pip install -r requirements.txt= directement — voici les bonnes approches :
+
+** 1. Utiliser le flake/shell de QMK (recommandé)
+
+Le dépôt QMK fournit déjà un environnement Nix :
+
+#+begin_src bash
+cd ~/qmk_firmware
+nix-shell   # utilise shell.nix
+# ou si le repo a un flake :
+nix develop
+#+end_src
+
+Cela installe automatiquement toutes les dépendances Python + les toolchains ARM/AVR.
+
+** 2. Package qmk via nixpkgs
+
+#+begin_src nix
+# configuration.nix ou home.nix
+environment.systemPackages = with pkgs; [
+  qmk
+];
+#+end_src
+
+** 3. Déclarer les dépendances dans un shell.nix maison
+
+#+begin_src nix
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  buildInputs = [
+    (pkgs.python3.withPackages (ps: with ps; [
+      appdirs
+      argcomplete
+      colorama
+      dotty-dict
+      hid
+      hjson
+      jsonschema
+      milc
+      pygments
+      pyserial
+      pyusb
+      pillow
+    ]))
+    pkgs.qmk-udev-rules  # important pour le flash
+  ];
+}
+#+end_src
+
+** Points importants NixOS
+
+- *Udev rules* : nécessaires pour flasher les claviers :
+  #+begin_src nix
+  # configuration.nix
+  hardware.keyboard.qmk.enable = true;
+  #+end_src
+- Ajoutez votre utilisateur au groupe =plugdev= (et =input= si besoin).
+- ⚠️ Certains paquets Python (comme =hid=, =dotty-dict=, =milc=) ne sont pas tous dans nixpkgs ; dans ce cas le =shell.nix= officiel de QMK (option 1) les gère déjà, ou utilisez =pip= dans un venv *à l'intérieur d'un =nix-shell=* :
+
+#+begin_src bash
+nix-shell -p python3 python3Packages.virtualenv
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+#+end_src
+
+*Recommandation* : commencez par =nix-shell= dans le repo QMK, c'est la voie officiellement supportée.
+
+** si j'utilise nix-shell, j'ai juste besoin d'être dans le user group?
+
+
+
+#+begin_reasoning
+User asks: if using nix-shell, do they just need to be in the user group (plugdev)? Answer: nix-shell handles Python deps/toolchains, but udev rules still needed for flashing. QMK repo's shell.nix doesn't install udev rules system-wide. Need hardware.keyboard.qmk.enable = true or udev rules, plus plugdev group. Explain.
+#+end_reasoning
+
+Pas tout à fait — =nix-shell= et les groupes/udev règles sont deux choses complémentaires :
+
+*Ce que =nix-shell= fournit*
+- Les dépendances Python (milc, pyusb, etc.)
+- Les toolchains de compilation (gcc-arm-embedded, avr-gcc...)
+- Les outils de flash (dfu-util, avrdude, teensy-loader...)
+
+*Ce que =nix-shell= ne fournit PAS*
+- Les règles udev système → sans elles, le flash échouera avec des erreurs de permission (=dfu-util: Cannot open DFU device=)
+
+*Configuration minimale dans =configuration.nix=*
+
+#+begin_src nix
+{
+  # Installe les udev rules QMK (gère aussi le groupe plugdev)
+  hardware.keyboard.qmk.enable = true;
+
+  users.users.votreUser.extraGroups = [ "plugdev" ];
+}
+#+end_src
+
+Puis :
+
+#+begin_src bash
+sudo nixos-rebuild switch
+# Déconnexion/reconnexion pour que le groupe soit pris en compte
+# (ou : newgrp plugdev)
+#+end_src
+
+*Vérification*
+
+#+begin_src bash
+groups | grep plugdev          # vous devez voir plugdev
+ls /etc/udev/rules.d/ | grep qmk  # les règles doivent exister
+#+end_src
+
+*En résumé*
+
+| Besoin | Solution |
+|---|---|
+| Compiler le firmware | =nix-shell= dans ~/qmk_firmware |
+| Flasher le clavier | =hardware.keyboard.qmk.enable= + groupe =plugdev= |
+
+Donc oui : une fois les deux en place, =nix-shell= + groupe =plugdev= suffisent, aucun =sudo= nécessaire pour flasher. 🎉
+
+*** 
