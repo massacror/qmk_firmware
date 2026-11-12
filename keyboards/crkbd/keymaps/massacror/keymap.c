@@ -55,9 +55,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
     ,
     [4] = LAYOUT_split_3x6_3(
-                             XXXXXXX, RGB_VAD, RGB_VAI, _______, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, _______, KC_TRANSPARENT, KC_TRANSPARENT,    XXXXXXX,
-                             XXXXXXX, KC_AUDIO_VOL_DOWN, KC_AUDIO_VOL_UP,KC_BRIGHTNESS_UP, KC_BRIGHTNESS_DOWN, KC_TRANSPARENT,          KC_END, KC_DOWN, KC_PGDN, KC_LEFT, KC_NO, XXXXXXX,
-                             XXXXXXX, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                   KC_RIGHT, KC_HOME, KC_UP, KC_PGUP, KC_INS,    XXXXXXX,
+                             XXXXXXX, RGB_VAD, RGB_VAI, _______, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_NUMLOCK, KC_TRANSPARENT, _______, KC_TRANSPARENT, KC_TRANSPARENT,    XXXXXXX,
+                             XXXXXXX, KC_AUDIO_VOL_DOWN, KC_AUDIO_VOL_UP,KC_BRIGHTNESS_UP, KC_BRIGHTNESS_DOWN, KC_TRANSPARENT,          KC_P1, KC_P2, KC_P3, KC_P4,KC_P5, XXXXXXX,
+                             XXXXXXX, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                   KC_P6, KC_P7, KC_P8, KC_P9, KC_P0,    XXXXXXX,
                                                             KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
                              )
     ,
